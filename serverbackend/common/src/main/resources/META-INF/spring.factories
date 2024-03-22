@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.glimmer.common.exception.ExceptionCatch,\
+  com.glimmer.common.swagger.SwaggerConfiguration,\
+  com.glimmer.common.swagger.Swagger2Configuration,\
+  com.glimmer.common.redis.CacheService

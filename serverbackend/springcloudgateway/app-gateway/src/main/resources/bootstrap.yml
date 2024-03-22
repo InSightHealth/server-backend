@@ -1,0 +1,14 @@
+server:
+  port: 51603
+spring:
+  application:
+    name: app-gateway
+  profiles:
+    active: prod
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 117.72.13.28:8848
+      config:
+        server-addr: 117.72.13.28:8848
+        file-extension: yml

@@ -1,0 +1,19 @@
+server:
+  port: 51702
+spring:
+  application:
+    name: storage
+  profiles:
+    active: prod
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 117.72.13.28:8848
+      config:
+        server-addr: 117.72.13.28:8848
+        file-extension: yml
+  servlet:
+    multipart:
+      enabled: true #默认支持文件上传
+      max-file-size: -1 #不做限制
+      max-request-size: -1 #不做限制
