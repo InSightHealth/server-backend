@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: storage
+  name: storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: storage
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: storage
+    spec:
+      containers:
+      - image: kubernetes-register.aubrey.com/insight_health/storage:latest
+        name: storage
+        env:
+          - name: PARAMS
+            value: "--spring.profiles.active=prod"
+        ports:
+        - protocol: TCP
+          containerPort: 51702
+        resources: {}
+status: {}

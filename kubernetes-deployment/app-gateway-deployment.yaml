@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-gateway
+spec:
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 51603
+    targetPort: 51603
+    nodePort: 30000
+    name: app-gateway
+  selector:
+    app: app-gateway
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: app-gateway
+  name: app-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-gateway
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: app-gateway
+    spec:
+      containers:
+      - image: kubernetes-register.aubrey.com/insight_health/app-gateway:latest
+        name: app-gateway
+        env:
+          - name: PARAMS
+            value: "--spring.profiles.active=prod"
+        ports:
+        - protocol: TCP
+          containerPort: 51603
+        resources: {}
+status: {}
