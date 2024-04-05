@@ -1,3 +1,5 @@
 # README
 
-**kubernetes集群的资源部署yaml文件**
+**该目录下存放kubernetes集群的资源部署yaml文件**
+
+这里我是将所需镜像通过Maven的docker插件进行打包，主要为app-gateway，user和storage三个微服务，dockerFile已编写在其对应目录下，并将打包完成的镜像推送至自己的私有仓库，从而完成kubernetes集群应用的部署。
