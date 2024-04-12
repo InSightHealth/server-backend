@@ -24,6 +24,13 @@ public class UserController {
         return userService.Login(dto);
     }
 
+    @PostMapping("/loginFast")
+    @ApiOperation("账户无障碍登录")
+    public ResponseResult LoginFast(@RequestBody SendCodeDto dto){
+        return userService.LoginFast(dto);
+    }
+
+
     @PostMapping("/sendCode")
     @ApiOperation(value = "验证码发送")
     public ResponseResult SendCode(@RequestBody SendCodeDto dto){

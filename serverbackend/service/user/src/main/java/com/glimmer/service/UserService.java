@@ -61,4 +61,11 @@ public interface UserService extends IService<User> {
      * @return
      */
     ResponseResult Delete();
+
+    /**
+     * 无障碍人群登录
+     * @param dto
+     * @return
+     */
+    ResponseResult LoginFast(SendCodeDto dto);
 }

@@ -80,15 +80,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_ID 和 ALIBABA_CLOUD_ACCESS_KEY_SECRET。
         com.aliyun.dysmsapi20170525.Client client = null;
         try {
-            client = createClient(System.getenv("ALIBABA_CLOUD_ACCESS_KEY_ID"), System.getenv("ALIBABA_CLOUD_ACCESS_KEY_SECRET"));
+            client = createClient("LTAI5tHQs4F9uKDDWwxyXxDZ", "9zFnT8lILZaWJseejffVbNQAw5rBEj");
         } catch (Exception e) {
             return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR);
         }
         Random r = new Random();
         Integer code = r.nextInt(900000) + 100000;
         com.aliyun.dysmsapi20170525.models.SendSmsRequest sendSmsRequest = new com.aliyun.dysmsapi20170525.models.SendSmsRequest()
-                .setSignName("App短信验证码") //填入自己的签名
-                .setTemplateCode("SMS_465331482") //填入自己的模版
+                .setSignName("App短信验证码")
+                .setTemplateCode("SMS_465331482")
                 .setPhoneNumbers(dto.getPhone())
                 .setTemplateParam("{\"code\":\""+code+"\"}");
         com.aliyun.teautil.models.RuntimeOptions runtime = new com.aliyun.teautil.models.RuntimeOptions();
@@ -120,10 +120,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             one.setUsername(getRandomString(10));
             one.setCreatedTime(new Date());
             save(one);
+        }else{
+            one.setCode(code);
+            one.setCreatedTime(new Date());
+            updateById(one);
         }
-        one.setCode(code);
-        one.setCreatedTime(new Date());
-        updateById(one);
 
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
@@ -284,6 +285,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         cleanCache("*");
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+    @Override
+    public ResponseResult LoginFast(SendCodeDto dto) {
+        if(dto == null || dto.getPhone() == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+        }
+        User user = null;
+        if(!StringUtils.isBlank(dto.getPhone())) {
+            user = getOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, dto.getPhone()));
+            if(user == null) {
+                //表明之前未注册
+                user = new User();
+                user.setPhone(dto.getPhone());
+                user.setStatus(1);
+                user.setUsername(getRandomString(10));
+                save(user);
+            }
+        }
+        //校验账户状态,1为正常,0锁定
+        if(user.getStatus()!=1){
+            return ResponseResult.errorResult(AppHttpCodeEnum.ACCOUNT_LOCKED);
+        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("token", AppJwtUtil.getToken(user.getId().longValue()));
+        return ResponseResult.okResult(map);
     }
 
     public static String getRandomString(int length) {
