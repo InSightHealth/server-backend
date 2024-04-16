@@ -80,7 +80,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_ID 和 ALIBABA_CLOUD_ACCESS_KEY_SECRET。
         com.aliyun.dysmsapi20170525.Client client = null;
         try {
-            client = createClient("LTAI5tHQs4F9uKDDWwxyXxDZ", "9zFnT8lILZaWJseejffVbNQAw5rBEj");
+            client = createClient(System.getenv("ALIBABA_CLOUD_ACCESS_KEY_ID"), System.getenv("ALIBABA_CLOUD_ACCESS_KEY_SECRET"));
         } catch (Exception e) {
             return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR);
         }
